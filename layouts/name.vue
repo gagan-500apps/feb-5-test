@@ -3,33 +3,54 @@
       <header>
         <nav>
           <ul class="navbar">
-            <li><NuxtLink  to="/login">Login</NuxtLink></li> 
-            <li><NuxtLink  to="/register">Register</NuxtLink></li> 
-           
-           
-         
+            <li><NuxtLink  to="/taskONE">TaskONE</NuxtLink></li>
+            <li><NuxtLink  to="/taskThree">TaskThree</NuxtLink></li> 
+            <li><NuxtLink  to="/taskFour">TaskFour</NuxtLink></li> 
+            
+
+          <li>UserName: {{ userName }}</li>
           </ul>
         </nav>
       </header>
       <slot />
-    </div> 
-  </template>
+    </div>
+</template>
+
+<script setup> 
+
+import {validation} from '../stores/validation'
+let userName=ref()
+userName = validation().loginUser_data[0]?.Email;
+console.log('LOGINNAME',userName);
 
 
-  <script setup> 
-  
 
-  import {validation} from '../stores/validation'
-  let callValidation=ref()
-  callValidation = validation().loginUser_data[0]?.Email;
-console.log('callValidation',callValidation);
+
+// onMounted(()=> {
+//   const storeLocalStorage=()=>{
+//   localStorage.setItem(localStorageKey, JSON.stringify(userName));
+// };
+// storeLocalStorage()
+// })
+
+
+// const loginData={}
+// onMounted(()=>{
+//    loginData=localStorage.getItem(loginUser_data);
+//     // userName = JSON.parse(name);
+//     // console.log('userName', userName);
+//     // console.log('loginData',loginData);
+//     userName=loginData.Email
+// })
+
 
 </script>
 
 
-  <style scoped>
-  /* Center the navbar items */
-  .navbar {
+
+<style>
+
+.navbar {
     list-style: none;
     padding: 3%;
     margin: 0;
@@ -61,4 +82,4 @@ console.log('callValidation',callValidation);
     background-color: #007BFF; /* Change the background color on hover */
     color: #fff; /* Change the text color on hover */
   }
-  </style>
+</style>

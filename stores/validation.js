@@ -5,15 +5,19 @@ export const validation=defineStore('form',()=>{
     const loginUser_data=[]
     // const boolean=null
     
+
+    // STOREING THE DATA IN THE LOCAL STORAGE
     const regsisterstoredata=(userdata)=>{
         registeredUser_data.push(userdata)
         localStorage.setItem('registeredUser_data', JSON.stringify(registeredUser_data))
         console.log("register done");
     }
 
+
     const loginstoredata=(userdata)=>{
         loginUser_data.push(userdata)
         // console.log("done",loginUser_data);
+        localStorage.setItem('loginUser_data', JSON.stringify(loginUser_data))
                 console.log('registeredUser_data',registeredUser_data);
                 console.log('loginUser_data',loginUser_data);
             console.log('loginUser_data.Email',loginUser_data[0].Email);
@@ -29,5 +33,5 @@ export const validation=defineStore('form',()=>{
 
 
 
-    return {regsisterstoredata, loginstoredata, check}
+    return {regsisterstoredata, loginstoredata, check, loginUser_data}
 }) 

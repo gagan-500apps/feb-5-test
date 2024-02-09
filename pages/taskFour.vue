@@ -1,71 +1,62 @@
-
-  <template>
-     <div class="d">TASK4</div>
-     <div>
-        
-      <!--  <div class="search-bar">
-      <input v-model="searchQuery" type="text" placeholder="Search Contacts" @input="searchContacts" />
-    </div> -->
-
-      <button  @click="openForm" class="add-contact-btn">Add Contact</button>
-      <!-- <button class="b" @click="openAddModal">Add</button> -->
+<template>
+  <div class="container mx-auto py-8">
+    <div class="text-3xl font-bold mb-4">TASK4</div>
+    <div class="relative">
+      <button @click="openForm" class="absolute top-0 right-0 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Add Contact</button>
       <div v-if="isFormOpen" class="modal">
-        <div class="modal-content">
-          <span class="close" @click="closeForm">&times;</span>
-  
-          <form @submit.prevent="saveContact">
-            <label for="name">Name:</label>
-            <input v-model="name" type="text" required />
-  
-            <label for="phone">Phone Number:</label>
-            <input v-model="phone" type="text" required />
-  
-            <label for="country">Country:</label>
-            <select v-model="country" required>
+        <div class="modal-content bg-white p-6 mx-auto mt-16 w-80 rounded-lg shadow-lg">
+          <span class="close absolute top-0 right-0 text-gray-700 cursor-pointer" @click="closeForm">&times;</span>
+          <form @submit.prevent="saveContact" class="space-y-4">
+            <label for="name" class="block">
+              Name:
+              <input v-model="name" type="text" required class="form-input mt-1 w-full" />
+            </label>
+            <label for="phone" class="block">
+              Phone Number:
+              <input v-model="phone" type="text" required class="form-input mt-1 w-full" />
+            </label>
+            <label for="country" class="block">
+              Country:
+              <select v-model="country" required class="form-select mt-1 w-full">
                 <option value="India">India</option>
-              <option value="USA">USA</option>
-              <option value="Canada">Canada</option>
-             
-            </select>
-  
-            <button type="submit">Save Contact</button>
+                <option value="USA">USA</option>
+                <option value="Canada">Canada</option>
+              </select>
+            </label>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Save Contact</button>
           </form>
         </div>
       </div>
-  
-      <!-- <div v-for="contact in savedContacts" :key="contact.id" class="contact-box">
-        <div class="square-box">
-          <span class="close-box" @click="confirmRemove(contact.id)">&times;</span>
-          <p>Name: {{ contact.name }}</p>
+    </div>
+
+    <!-- //search -->
+    <div class="mt-4 mb-8">
+    <input v-model="searchQuery" type="text" placeholder="Search Contacts" class="form-input px-4 py-2 rounded-md border border-gray-300 mr-28 w-full" />
+  </div>
+    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div v-for="contact in filteredContacts" :key="contact.id" class="contact-box relative">
+        <div class="square-box border p-4">
+          <span class="close-box absolute top-0 right-0 text-gray-700 cursor-pointer" @click="confirmRemove(contact.id)">&times;</span>
+          <p class="font-bold">Name: {{ contact.name }}</p>
           <p>Phone Number: {{ contact.phone }}</p>
           <p>Country: {{ contact.country }}</p>
         </div>
-      </div> -->
-  
-      <div v-for="contact in filteredContacts" :key="contact.id" class="contact-box">
-      <div class="square-box">
-        <span class="close-box" @click="confirmRemove(contact.id)">&times;</span>
-        <p>Name: {{ contact.name }}</p>
-        <p>Phone Number: {{ contact.phone }}</p>
-        <p>Country: {{ contact.country }}</p>
       </div>
     </div>
 
-
-      <div v-if="confirmBox.isOpen" class="confirmation-box">
-        <div class="confirmation-content">
-          <p>Are you sure you want to delete this contact?</p>
-          <button @click="removeConfirmed">Yes</button>
-          <button @click="cancelRemove">No</button>
+    <div v-if="confirmBox.isOpen" class="confirmation-box flex items-center justify-center fixed top-0 left-0 w-full h-full bg-black bg-opacity-50">
+      <div class="confirmation-content bg-white p-4 rounded border">
+        <p>Are you sure you want to delete this contact?</p>
+        <div class="mt-4">
+          <button @click="removeConfirmed" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">Yes</button>
+          <button @click="cancelRemove" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">No</button>
         </div>
       </div>
     </div>
-  </template>
-
-
+  </div>
+</template>
 
 <script setup>
-
 import { ref, computed } from 'vue';
 
 const isFormOpen = ref(false);
@@ -93,6 +84,7 @@ const saveContact = () => {
   };
 
   savedContacts.value.push(newContact);
+  storeLaocal();
   resetForm();
 };
 
@@ -126,145 +118,22 @@ const filteredContacts = computed(() => {
   );
 });
 
-  </script>
+const key = 'ContactDetails';
 
+const storeLaocal = () => {
+  localStorage.setItem(key, JSON.stringify(savedContacts.value));
+};
 
-  <style scoped>
+onMounted(() => {
+const savedItems = localStorage.getItem(key);
+console.log('savedItems', savedItems);
+savedContacts.value = JSON.parse(savedItems);
+});
+definePageMeta({
+        layout: 'name'
+    })
+</script>
 
-.b{
-    color: white;
-    background-color: rgb(39, 138, 39);
-    border: rgb(13, 13, 13) solid 1px;
-    padding-right: 30px;
-    padding-left: 30px;
-
-}
-.d{
-    margin-top: 10%;
-  }
-
-  .modal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    z-index: 1;
-    margin-top: 10%;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  
-  .modal-content {
-    /* background-color: #fefefe; */
-    padding: 20px;
-    border: 1px solid #888;
-  }
-  
-  .close {
-  color: #aaa;
-  float: right; 
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close:hover,
-  .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  .contact-container {
-  margin-top: 40px;
-  position: relative;
-}
-  .add-contact-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 2;
-  margin-top: 10%;
-  margin-right: 20%;
-  color: white;
-    background-color: rgb(39, 138, 39);
-    border: rgb(13, 13, 13) solid 1px;
-    padding-right: 30px;
-    padding-left: 30px;
-}
-
-.contact-box {
-   z-index: 1;
-  position: relative;
-}
-
-.square-box {
-  border: 1px solid #ddd;
-  padding: 10px;
-  width: 150px; 
-  height: 150px; 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-  
-  .close-box {
-  position: absolute;
-  top: 5px;
-  right: 5px; 
-  /* color: #aaa; */
-  font-size: 20px;
-  cursor: pointer;
-}
-  
-  .close-box:hover,
-  .close-box:focus {
-    color: black;
-  }
-
-  .confirmation-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  z-index: 2;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.confirmation-content {
-  /* background-color: #fefefe; */
-  padding: 20px;
-  border: 1px solid #888;
-  text-align: center;
-}
-
-.confirmation-content button {
-  margin: 0 10px;
-}
-
-.search-bar {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 2;
-}
-
-.add-contact-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 2;
-}
-  </style>
-  
-  
-  
+<style scoped>
+/* Your existing scoped styles */
+</style>
